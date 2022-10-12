@@ -1,11 +1,18 @@
-import {useRef} from 'react';
-import {BackSide, PCFSoftShadowMap} from 'three';
+import {useRef, useEffect} from 'react';
+import {
+  BackSide,
+  PCFSoftShadowMap,
+  CineonToneMapping,
+  ACESFilmicToneMapping,
+  NoToneMapping,
+} from 'three';
 import {Canvas, useThree} from '@react-three/fiber';
-import {OrbitControls} from '@react-three/drei';
+import {OrbitControls, Environment} from '@react-three/drei';
 import {atom} from 'jotai';
 import Palette from './components/Palette';
 import Car from './components/Car';
 import './App.scss';
+import * as lil from 'lil-gui';
 
 export const customColorAtom = atom({
   carpaint: '#ffffff',
@@ -55,6 +62,21 @@ const DirLight = () => {
   );
 };
 
+// const gui = new lil.GUI();
+const ToneMapping = () => {
+  const gl = useThree(state => state.gl);
+
+  // useEffect(() => {
+  //   gl.toneMapping = CineonToneMapping;
+  //   gui.add(gl, 'toneMapping', {
+  //     No: NoToneMapping,
+  //     ACESFilmic: ACESFilmicToneMapping,
+  //     Cineon: CineonToneMapping,
+  //   });
+  //   gui.add(gl, 'toneMappingExposure').min(0).max(5).step(0.01);
+  // }, []);
+};
+
 function App() {
   return (
     <>
@@ -69,7 +91,7 @@ function App() {
           position: [9, 9, 10],
         }}>
         <DirLight />
-        <ambientLight args={[0xffffff, 0.35]} />
+        <ambientLight args={[0xffffff, 0.3]} />
         <Controls />
         <Car />
         <mesh rotation-x={-Math.PI * 0.5} position-y={-2} receiveShadow={true}>
@@ -80,6 +102,8 @@ function App() {
           <boxGeometry args={[300, 300, 300]} />
           <meshStandardMaterial side={BackSide} color={0xffffff} />
         </mesh>
+        <Environment files={'hdr.hdr'} />
+        <ToneMapping />
       </Canvas>
       <Palette />
     </>

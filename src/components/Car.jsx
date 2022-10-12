@@ -1,43 +1,184 @@
-import React, {Suspense} from 'react';
-import * as THREE from 'three';
-import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
-import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader';
-import {useLoader} from '@react-three/fiber';
-import {Environment} from '@react-three/drei';
+import React, {useRef, Suspense} from 'react';
+import {useGLTF} from '@react-three/drei';
 import {useAtomValue} from 'jotai';
 import {customColorAtom} from '../App';
 
-const Car = () => {
+const Car = props => {
   const customColor = useAtomValue(customColorAtom);
-
-  const gltfs = useLoader(GLTFLoader, 'tsla_m3.gltf', loader => {
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('/draco/');
-    loader.setDRACOLoader(dracoLoader);
-  });
-
-  gltfs.scene.traverse(node => {
-    if (
-      node instanceof THREE.Mesh &&
-      node.material instanceof THREE.MeshStandardMaterial
-    ) {
-      node.receiveShadow = true;
-      node.castShadow = true;
-      if (node.material?.name === 'carpaint') {
-        node.material.color.set(customColor['carpaint']);
-        node.material.roughness = 0.6;
-      } else if (node.material?.name === 'GlossyInterior') {
-        node.material.color.set(customColor['interior']);
-      }
-    }
-  });
+  const group = useRef();
+  const {nodes, materials} = useGLTF('/tsla_m3.gltf');
 
   return (
     <Suspense fallback={null}>
-      <primitive object={gltfs.scene} />
-      <Environment files={'hdr.hdr'} />
+      <group ref={group} {...props} dispose={null}>
+        <mesh
+          name="Cube001"
+          geometry={nodes.Cube001.geometry}
+          material={materials.carpaint}
+          material-color={customColor['carpaint']}
+          material-roughness={0.6}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_1"
+          geometry={nodes.Cube001_1.geometry}
+          material={materials.BlackWash}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_2"
+          geometry={nodes.Cube001_2.geometry}
+          material={materials.glass}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_3"
+          geometry={nodes.Cube001_3.geometry}
+          material={materials.glassDark}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_4"
+          geometry={nodes.Cube001_4.geometry}
+          material={materials.OrangeLights}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_5"
+          geometry={nodes.Cube001_5.geometry}
+          material={materials.Mirror}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_6"
+          geometry={nodes.Cube001_6.geometry}
+          material={materials.Silver}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_7"
+          geometry={nodes.Cube001_7.geometry}
+          material={materials.innerLights}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_8"
+          geometry={nodes.Cube001_8.geometry}
+          material={materials.innerLightMetals}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_9"
+          geometry={nodes.Cube001_9.geometry}
+          material={materials.RedLight}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_10"
+          geometry={nodes.Cube001_10.geometry}
+          material={materials.TireRubber}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_11"
+          geometry={nodes.Cube001_11.geometry}
+          material={materials['Tire Rims']}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_12"
+          geometry={nodes.Cube001_12.geometry}
+          material={materials.Breaks}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_13"
+          geometry={nodes.Cube001_13.geometry}
+          material={materials.carBrand}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_14"
+          geometry={nodes.Cube001_14.geometry}
+          material={materials.GlossyInterior}
+          material-color={customColor['interior']}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_15"
+          geometry={nodes.Cube001_15.geometry}
+          material={materials.LightGrayInterior}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_16"
+          geometry={nodes.Cube001_16.geometry}
+          material={materials.interiorGray}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_17"
+          geometry={nodes.Cube001_17.geometry}
+          material={materials.BlackSuade}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_18"
+          geometry={nodes.Cube001_18.geometry}
+          material={materials.Wood}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_19"
+          geometry={nodes.Cube001_19.geometry}
+          material={materials.White}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_20"
+          geometry={nodes.Cube001_20.geometry}
+          material={materials.LicensePlateText}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_21"
+          geometry={nodes.Cube001_21.geometry}
+          material={materials.LicensePlateRed}
+          receiveShadow
+          castShadow
+        />
+        <mesh
+          name="Cube001_22"
+          geometry={nodes.Cube001_22.geometry}
+          material={materials.LicensePlateYellow}
+          receiveShadow
+          castShadow
+        />
+      </group>
     </Suspense>
   );
 };
 
 export default Car;
+useGLTF.preload('/tsla_m3.gltf');
